@@ -11,6 +11,18 @@ const parseBuildArgs = () => {
     .map(env => (`--build-arg ${env}=${process.env[env]}`));
 }
 
+const getBranchName = () => {
+  const ref = process.env.GITHUB_REF;
+  const pr_ref = process.env.GITHUB_HEAD_REF;
+  debug(ref);
+  debug(pr_ref);
+  if (ref && /\/development|\/master/.test(ref)) {
+    return ref.replace('refs/heads/', '');
+  } else if (pr_ref && /\/pull\//.test(ref)) {
+    return pr_ref;
+  }
+}
+
 const parseHeadTag = (packagePath) => {
   const headTag = [];
   const tagHead = getInput("head-tag").toLowerCase().trim();
@@ -18,7 +30,7 @@ const parseHeadTag = (packagePath) => {
   debug(typeof tagHead)
   const shouldTagHead = tagHead === 'true' || tagHead === false;
   if (shouldTagHead) {
-    const branchName = process.env.GITHUB_REF.replace('refs/heads/', '');
+    const branchName = getBranchName();
     if (branchName === 'master') {
       headTag.push(`-t ${packagePath}:latest`)
     } else if (branchName === 'development') {
