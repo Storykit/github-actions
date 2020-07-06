@@ -1,0 +1,15 @@
+{
+  "name": "github-actions",
+  "version": "1.0.0",
+  "description": "Github packages for Storykit org",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Storykit/github-actions.git"
+  },
+  "author": "Storykit AB",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Storykit/github-actions/issues"
+  },
+  "homepage": "https://github.com/Storykit/github-actions#readme"
+}
