@@ -1,12 +1,33 @@
 const { exec } = require("@actions/exec");
 const { getInput, setFailed, setOutput } = require("@actions/core");
 
-const parseTag = (tag, packagePath) => {
-  if (!tag.includes(',')) {
-    return `-t ${packagePath}:${tag}`
-  } else {
-    return tag.split(',').tag.map(t => (`-t ${packagePath}:${t}`)).join(' ');
+const BUILD_ARGS = ['NPM_TOKEN'];
+
+const parseBuildArgs = () => {
+  const envValueExists = BUILD_ARGS.some(env => !!process.env[env]);
+  if (!envValueExists) { return []; }
+
+  return BUILD_ARGS.filter(env => !!process.env[env])
+    .map(env => (`--build-arg ${env}`));
+}
+
+const parseHeadTag = (packagePath) => {
+  const headTag = [];
+  const tagHead = getInput("head-tag").toLowerCase().trim();
+  console.log(tagHead)
+  console.log(typeof tagHead)
+  const shouldTagHead = tagHead === 'true' || tagHead === false;
+  if (shouldTagHead) {
+    const branchName = process.env.GITHUB_REF.replace('refs/heads/', '');
+    if (branchName === 'master') {
+      headTag.push(`-t ${packagePath}:latest`)
+    } else if (branchName === 'development') {
+      headTag.push(`-t ${packagePath}:development`)
+    } else {
+      headTag.push(`-t ${packagePath}:pr-${branchName}`);
+    }
   }
+  return headTag;
 }
 
 async function run() {
@@ -17,13 +38,19 @@ async function run() {
 
   const username = process.env.GITHUB_ACTOR;
   const githubRepo = process.env.GITHUB_REPOSITORY.toLowerCase();
-  const NPM_TOKEN = process.env.NPM_TOKEN;
 
   const packagePath = `docker.pkg.github.com/${githubRepo}/${imageName}`;
+  const dockerBuildArr = ['build'];
 
-  const npmTokenArg = NPM_TOKEN && `--build-arg NPM_TOKEN=${NPM_TOKEN}` || '';
+  const parsedBuildArgs = parseBuildArgs();
+  dockerBuildArr.push(...parsedBuildArgs);
 
-  const parsedTag = parseTag(tag, packagePath);
+  const parsedHeadTags = parseHeadTag(packagePath);
+  dockerBuildArr.push(...parsedHeadTags);
+
+  dockerBuildArr.push(`-t ${packagePath}:${tag}`);
+  dockerBuildArr.push(dockerfileLocation);
+
   try {
     await exec(
       `docker login docker.pkg.github.com -u ${username} -p ${token}`
@@ -32,9 +59,7 @@ async function run() {
     setFailed(`action failed with error: ${err}`);
   }
   try {
-    await exec(
-      `docker build ${npmTokenArg} ${parsedTag} ${dockerfileLocation}`
-    );
+    await exec('docker', dockerBuildArr);
   } catch (err) {
     setFailed(`action failed with error: ${err}`);
   }
