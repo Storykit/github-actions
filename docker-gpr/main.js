@@ -41,7 +41,7 @@ async function run() {
   const githubRepo = process.env.GITHUB_REPOSITORY.toLowerCase();
 
   const packagePath = `docker.pkg.github.com/${githubRepo}/${imageName}`;
-  const dockerBuildArr = [];
+  const dockerBuildArr = ['build'];
 
   const parsedBuildArgs = parseBuildArgs();
   dockerBuildArr.push(...parsedBuildArgs);
@@ -61,7 +61,7 @@ async function run() {
   }
   try {
     debug(dockerBuildArr)
-    await exec('docker build', dockerBuildArr);
+    await exec(`docker ${dockerBuildArr.join(' ')}`);
   } catch (err) {
     setFailed(`action failed with error: ${err}`);
   }
