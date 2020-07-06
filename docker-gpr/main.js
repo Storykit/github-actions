@@ -1,36 +1,46 @@
-const exec = require("@actions/exec");
-const core = require("@actions/core");
+const { exec } = require("@actions/exec");
+const { getInput, setFailed, setOutput } = require("@actions/core");
+
+const parseTag = (tag, packagePath) => {
+  if (!tag.include(',')) {
+    return `-t ${packagePath}:${tag}`
+  } else {
+    return tag.map(t => (`-t ${packagePath}:${t}`)).join(' ');
+  }
+}
 
 async function run() {
-  const token = core.getInput("repo-token");
-  const dockerfileLocation = core.getInput("dockerfile-location");
+  const token = getInput("repo-token");
+  const dockerfileLocation = getInput("dockerfile-location");
+  const imageName = getInput("image-name").toLowerCase();
+  const tag = getInput("tag").toLowerCase().trim();
+
   const username = process.env.GITHUB_ACTOR;
-  const imageName = core.getInput("image-name").toLowerCase();
   const githubRepo = process.env.GITHUB_REPOSITORY.toLowerCase();
-  const tag = core.getInput("tag").toLowerCase();
-  const tags = core.getInput("tags").toLowerCase().trim().split(',');
-  const fullImageReferences = tags.map(tag => (`-t docker.pkg.github.com/${githubRepo}/${imageName}:${tag}`))
-  const fullImageReference = `-t docker.pkg.github.com/${githubRepo}/${imageName}:${tag}`;
+
+  const packagePath = `docker.pkg.github.com/${githubRepo}/${imageName}`;
+
+  const parsedTag = parseTag(tag, packagePath);
   try {
-    await exec.exec(
+    await exec(
       `docker login docker.pkg.github.com -u ${username} -p ${token}`
     );
   } catch (err) {
-    core.setFailed(`action failed with error: ${err}`);
+    setFailed(`action failed with error: ${err}`);
   }
   try {
-    await exec.exec(
-      `docker build ${fullImageReferences || fullImageReference} ${dockerfileLocation}`
+    await exec(
+      `docker build ${parsedTag} ${dockerfileLocation}`
     );
   } catch (err) {
-    core.setFailed(`action failed with error: ${err}`);
+    setFailed(`action failed with error: ${err}`);
   }
   try {
-    await exec.exec(`docker push ${fullImageReference}`);
+    await exec(`docker push ${packagePath}`);
   } catch (err) {
-    core.setFailed(`Review the logs above, most likely you are using a package name associated with a different repository.  Rename your Image to fix. https://help.github.com/en/github/managing-packages-with-github-packages/about-github-packages#managing-packages for more information`);
+    setFailed(`Review the logs above, most likely you are using a package name associated with a different repository.  Rename your Image to fix. https://help.github.com/en/github/managing-packages-with-github-packages/about-github-packages#managing-packages for more information`);
   }
-  core.setOutput("imageUrl", fullImageReference);
+  setOutput("imageUrl", fullImageReference);
 }
 
 run();
