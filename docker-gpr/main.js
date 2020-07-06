@@ -17,8 +17,11 @@ async function run() {
 
   const username = process.env.GITHUB_ACTOR;
   const githubRepo = process.env.GITHUB_REPOSITORY.toLowerCase();
+  const NPM_TOKEN = process.env.NPM_TOKEN;
 
   const packagePath = `docker.pkg.github.com/${githubRepo}/${imageName}`;
+
+  const npmTokenArg = NPM_TOKEN && `--build-arg NPM_TOKEN=${NPM_TOKEN}` | '';
 
   const parsedTag = parseTag(tag, packagePath);
   try {
@@ -30,7 +33,7 @@ async function run() {
   }
   try {
     await exec(
-      `docker build ${parsedTag} ${dockerfileLocation}`
+      `docker build ${npmTokenArg} ${parsedTag} ${dockerfileLocation}`
     );
   } catch (err) {
     setFailed(`action failed with error: ${err}`);
@@ -40,7 +43,7 @@ async function run() {
   } catch (err) {
     setFailed(`Review the logs above, most likely you are using a package name associated with a different repository.  Rename your Image to fix. https://help.github.com/en/github/managing-packages-with-github-packages/about-github-packages#managing-packages for more information`);
   }
-  setOutput("imageUrl", fullImageReference);
+  setOutput("imageUrl", packagePath);
 }
 
 run();
