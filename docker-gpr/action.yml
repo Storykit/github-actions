@@ -17,9 +17,6 @@ inputs:
     description: tag for Docker image
     default: ${{ github.sha }}
     required: false
-  tags:
-    description: tag for Docker image
-    required: false
 outputs:
   imageUrl:
     description: Fully constructed URL to image for use when deploying

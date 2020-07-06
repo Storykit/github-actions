@@ -5,7 +5,7 @@ const parseTag = (tag, packagePath) => {
   if (!tag.include(',')) {
     return `-t ${packagePath}:${tag}`
   } else {
-    return tag.map(t => (`-t ${packagePath}:${t}`)).join(' ');
+    return tag.split(',').tag.map(t => (`-t ${packagePath}:${t}`)).join(' ');
   }
 }
 
