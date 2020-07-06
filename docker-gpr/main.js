@@ -8,7 +8,7 @@ const parseBuildArgs = () => {
   if (!envValueExists) { return []; }
 
   return BUILD_ARGS.filter(env => !!process.env[env])
-    .map(env => (`--build-arg ${env}`));
+    .map(env => (`--build-arg ${env}=${process.env[env]}`));
 }
 
 const parseHeadTag = (packagePath) => {
