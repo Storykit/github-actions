@@ -1,5 +1,5 @@
 const { exec } = require("@actions/exec");
-const { getInput, setFailed, setOutput, debug } = require("@actions/core");
+const { getInput, setFailed, setOutput, debug, setSecret } = require("@actions/core");
 
 const BUILD_ARGS = ['NPM_TOKEN'];
 
@@ -31,7 +31,7 @@ const parseHeadTag = (packagePath) => {
 }
 
 async function run() {
-  BUILD_ARGS.forEach(ENV => (core.setSecret(ENV)));
+  BUILD_ARGS.forEach(ENV => (setSecret(ENV)));
   const token = getInput("repo-token");
   const dockerfileLocation = getInput("dockerfile-location");
   const imageName = getInput("image-name").toLowerCase();
