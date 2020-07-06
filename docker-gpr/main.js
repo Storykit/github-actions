@@ -52,7 +52,7 @@ async function run() {
   const token = getInput("repo-token");
   const dockerfileLocation = getInput("dockerfile-location");
   const imageName = getInput("image-name").toLowerCase();
-  const tag = getInput("tag").toLowerCase().trim().substr(8);
+  const tag = getInput("tag").toLowerCase().trim().slice(0, 8);
 
   const username = process.env.GITHUB_ACTOR;
   const githubRepo = process.env.GITHUB_REPOSITORY.toLowerCase();

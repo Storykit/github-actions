@@ -19,3 +19,31 @@ A GitHub Action to upload Docker images to the GitHub Package Registry.
 |`stage-tag`| Image tag for staging environment (dependent on `head-tag`) |`development`||
 |`prod-branch`| Branch that represents production environment (dependent on `head-tag`) |`master`||
 |`prod-tag`| Image tag for production environment (dependent on `head-tag`) |`latest`||
+
+
+### Example: 
+build.yaml
+```yaml
+name: Build image
+
+on: 
+  push:
+    branches:
+      - development
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Build, Tag, Push
+      uses: storykit/github-actions/docker-gpr@v1.2.0
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        image-name: sally
+      env:
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+```
