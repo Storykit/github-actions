@@ -7,7 +7,7 @@ This repository holds a collection of GitHub Actions for Storykit Org.
 
 Each Action is located in a sub-directory in this repository. Documentation for use can be found along side the source code for the Action.
 
-- [docker-gpr](https://github.com/storykit/actions/tree/v1/docker-gpr) :clapper:
+- [docker-gpr](https://github.com/Storykit/github-actions/tree/master/docker-gpr)
 
 ## Helpful Links For Consuming These Actions
 
