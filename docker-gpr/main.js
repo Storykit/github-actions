@@ -21,7 +21,7 @@ async function run() {
 
   const packagePath = `docker.pkg.github.com/${githubRepo}/${imageName}`;
 
-  const npmTokenArg = NPM_TOKEN && `--build-arg NPM_TOKEN=${NPM_TOKEN}` | '';
+  const npmTokenArg = NPM_TOKEN && `--build-arg NPM_TOKEN=${NPM_TOKEN}` || '';
 
   const parsedTag = parseTag(tag, packagePath);
   try {
