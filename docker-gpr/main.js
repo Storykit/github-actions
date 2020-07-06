@@ -19,7 +19,7 @@ const getBranchName = () => {
   if (ref && /\/development|\/master/.test(ref)) {
     return ref.replace('refs/heads/', '');
   } else if (pr_ref && /\/pull\//.test(ref)) {
-    return pr_ref;
+    return pr_ref.replace('/', '-');
   }
 }
 
