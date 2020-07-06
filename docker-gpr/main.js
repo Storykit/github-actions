@@ -2,7 +2,7 @@ const { exec } = require("@actions/exec");
 const { getInput, setFailed, setOutput } = require("@actions/core");
 
 const parseTag = (tag, packagePath) => {
-  if (!tag.include(',')) {
+  if (!tag.includes(',')) {
     return `-t ${packagePath}:${tag}`
   } else {
     return tag.split(',').tag.map(t => (`-t ${packagePath}:${t}`)).join(' ');
