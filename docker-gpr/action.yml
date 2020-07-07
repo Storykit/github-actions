@@ -21,6 +21,24 @@ inputs:
     description: Should build also tag image for current branch
     default: true
     required: false
+
+  stage-branch:
+    description: Branch name for staging environment
+    default: 'development'
+    required: false
+  stage-tag:
+    description: Image tag for staging environment
+    default: 'development'
+    required: false
+  prod-branch:
+    description: Branch name for production environment
+    default: 'master'
+    required: false
+  prod-tag:
+    description: Image tag for production environment
+    default: 'latest'
+    required: false
+
 outputs:
   imageUrl:
     description: Fully constructed URL to image for use when deploying
