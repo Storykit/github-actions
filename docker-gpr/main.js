@@ -26,15 +26,20 @@ const getBranchName = () => {
 const parseHeadTag = (packagePath) => {
   const headTag = [];
   const tagHead = getInput("head-tag").toLowerCase().trim();
-  debug(tagHead)
-  debug(typeof tagHead)
+
+  const stageBranch = getInput("stage-branch").toLowerCase().trim();
+  const stageTag = getInput("stage-tag").toLowerCase().trim();
+
+  const prodBranch = getInput("prod-branch").toLowerCase().trim();
+  const prodTag = getInput("prod-tag").toLowerCase().trim();
+
   const shouldTagHead = tagHead === 'true' || tagHead === false;
   if (shouldTagHead) {
     const branchName = getBranchName();
-    if (branchName === 'master') {
-      headTag.push(`-t ${packagePath}:latest`)
-    } else if (branchName === 'development') {
-      headTag.push(`-t ${packagePath}:development`)
+    if (branchName === prodBranch) {
+      headTag.push(`-t ${packagePath}:${prodTag}`)
+    } else if (branchName === stageBranch) {
+      headTag.push(`-t ${packagePath}:${stageTag}`)
     } else {
       headTag.push(`-t ${packagePath}:pr-${branchName}`);
     }
@@ -47,7 +52,7 @@ async function run() {
   const token = getInput("repo-token");
   const dockerfileLocation = getInput("dockerfile-location");
   const imageName = getInput("image-name").toLowerCase();
-  const tag = getInput("tag").toLowerCase().trim();
+  const tag = getInput("tag").toLowerCase().trim().slice(0, 8);
 
   const username = process.env.GITHUB_ACTOR;
   const githubRepo = process.env.GITHUB_REPOSITORY.toLowerCase();
