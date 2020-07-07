@@ -31,7 +31,7 @@ inputs:
     default: 'development'
     required: false
   prod-branch:
-    description: Branch name for staging environment
+    description: Branch name for production environment
     default: 'master'
     required: false
   prod-tag:
