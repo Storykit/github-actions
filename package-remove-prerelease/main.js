@@ -51,10 +51,10 @@ const run = async () => {
 
     await Promise.all(tagsToRemovePromise)
 
-    await exec('npm', ['view', '@storykit/models@1.2.1-pr10.7'], { env })
     const env = {
       INPUT_TOKEN: NODE_AUTH_TOKEN
     }
+    await exec('npm', ['view', '@storykit/models@1.2.1-pr10.7'], { env })
     await exec('npm', ['config', 'ls', '-l'], { env });
     await exec('npm', ['whoami'], { env });
 
