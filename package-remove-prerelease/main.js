@@ -18,7 +18,7 @@ const run = async () => {
       repo
     });
 
-    if(!pullRequestFix.include('pr')){
+    if(!pullRequestFix.includes('pr')){
       setFailed('pull-request-fix must include snippet "pr" somewhere');
     }
 
