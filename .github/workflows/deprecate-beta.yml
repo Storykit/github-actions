@@ -15,11 +15,14 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Create .npmrc file
+    - name: Setup node
       uses: actions/setup-node@v1
       with:
         node-version: 12
         registry-url: 'https://registry.npmjs.org'
+
+    - run: |
+        echo "//npm.pkg.github.com/:_authToken=$NODE_AUTH_TOKEN" > ~/.npmrc
 
     - run: npm whoami
 
