@@ -21,6 +21,8 @@ jobs:
         node-version: 12
         registry-url: 'https://registry.npmjs.org'
 
+    - run: npm whoami
+
     - name: Deprecate beta version
       uses: ./package-remove-prerelease
       id: package-deprecate
