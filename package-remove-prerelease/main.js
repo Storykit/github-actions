@@ -36,10 +36,10 @@ const run = async () => {
       }
       return git.request('DELETE /repos/:owner/:repo/git/refs/:ref', options)
         .then((response) => {
-          debug(response)
           if (response.status === 204) {
             debug(`Removed tag: ${tag}`);
           } else {
+            debug(`Status: ${response.status}`)
             debug(`Was not able to remove tag: ${tag}`);
           }
         })
