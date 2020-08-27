@@ -3,7 +3,7 @@ const { getInput, setFailed, setOutput, debug, setSecret } = require("@actions/c
 const { Octokit } = require("@octokit/rest");
 const { context } = require('@actions/github')
 
-const { owner, repo } = context.repo()
+debug(context)
 
 const token = getInput('github-token');
 const pullRequestFix = getInput('pull-request-fix');
