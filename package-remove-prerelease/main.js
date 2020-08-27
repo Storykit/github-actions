@@ -18,6 +18,10 @@ const run = async () => {
       repo
     });
 
+    if(!pullRequestFix.include('pr')){
+      setFailed('pull-request-fix must include snippet "pr" somewhere');
+    }
+
     const tags = tagList.filter(tag => tag.name.includes(pullRequestFix))
       .map(tag => (tag.name));
 
