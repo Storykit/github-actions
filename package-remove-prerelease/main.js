@@ -18,7 +18,7 @@ const run = async () => {
       repo
     });
 
-    if(!pullRequestFix.includes('pr')){
+    if (!pullRequestFix.includes('pr')) {
       setFailed('pull-request-fix must include snippet "pr" somewhere');
     }
 
@@ -35,6 +35,9 @@ const run = async () => {
         },
       }
       return git.request('DELETE /repos/:owner/:repo/git/refs/:ref', options)
+        .then(() => {
+          debug(`Removed tag: ${tag}`);
+        })
         .catch(err => {
           debug(`Problem removing tag: ${tag}`)
           return Promise.reject(err);
