@@ -3,7 +3,8 @@ const { getInput, setFailed, setOutput, debug, setSecret } = require("@actions/c
 const { Octokit } = require("@octokit/rest");
 const { context } = require('@actions/github')
 
-debug(context)
+const owner = context.payload.organization.login;
+const repo = context.payload.repository.name;
 
 const token = getInput('github-token');
 const pullRequestFix = getInput('pull-request-fix');
@@ -11,18 +12,33 @@ const pullRequestFix = getInput('pull-request-fix');
 const git = new Octokit(token);
 
 const run = async () => {
-  const { data: listTagsResponse } = await git.repos.listTags({
-    owner,
-    repo
-  });
+  try {
+    const { data: tagList } = await git.repos.listTags({
+      owner,
+      repo
+    });
 
-  const tags =
-    listTagsResponse.map(tag => (tag.name))
-      .filter(version => version.includes(pullRequestFix));
+    const tags = tagList.filter(tag => tag.name.includes(pullRequestFix))
+      .map(tag => (tag.name));
 
-  //deleteRef
+    const tagsToRemovePromise = tags.map(tag => {
+      return git.git.deleteRef({
+        owner,
+        repo,
+        ref: `tags/${tag}`
+      })
+        .catch(err => {
+          debug(`Problem removing tag: ${tag}`)
+          return Promise.reject(err);
+        })
+    })
 
-  setOutput('removed-releases', tags.join());
+    await Promise.all(tagsToRemovePromise)
+
+    setOutput('removed-releases', tags.join());
+  } catch (err) {
+    setFailed(err)
+  }
 }
 
 run();
