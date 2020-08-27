@@ -51,8 +51,9 @@ const run = async () => {
 
     await Promise.all(tagsToRemovePromise)
 
-    await exec(`echo "//npm.pkg.github.com/:_authToken=${process.env.NODE_AUTH_TOKEN}" > ~/.npmrc`)
-    await exec('npm view @storykit/models@1.2.1-pr10.7')
+    /* await exec('npm view @storykit/models@1.2.1-pr10.7') */
+    await exec('npm config ls -l');
+    
 
     setOutput('removed-releases', tags.join());
   } catch (err) {
