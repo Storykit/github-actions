@@ -22,11 +22,15 @@ const run = async () => {
       .map(tag => (tag.name));
 
     const tagsToRemovePromise = tags.map(tag => {
-      return git.git.deleteRef({
-        owner,
-        repo,
-        ref: `tags/${tag}`
-      })
+      const options = {
+        owner: owner.toLocaleLowerCase(),
+        repo: repo.toLocaleLowerCase(),
+        ref: `tags/${tag}`,
+        headers: {
+          authorization: `token ${token}`,
+        },
+      }
+      return git.request('DELETE /repos/:owner/:repo/git/refs/:ref', options)
         .catch(err => {
           debug(`Problem removing tag: ${tag}`)
           return Promise.reject(err);
