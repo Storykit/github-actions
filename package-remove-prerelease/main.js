@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const { exec } = require("@actions/exec");
-const { getInput, setFailed, setOutput, debug, setSecret } = require("@actions/core");
+const { getInput, setFailed, setOutput, debug } = require("@actions/core");
 const { Octokit } = require("@octokit/rest");
 const { context } = require('@actions/github')
 
@@ -39,6 +39,8 @@ const run = async () => {
       return git.request('DELETE /repos/:owner/:repo/git/refs/:ref', options)
         .then((response) => {
           if (response.status === 204) {
+            await exec(`npm deprecate @${owner}/${repo}@${tag} "Beta release deprecated, please use latest version."`, { env })
+            .catch(err => (debug(err)));
             debug(`Removed tag: ${tag}`);
           } else {
             debug(`Status: ${response.status}`)
@@ -56,7 +58,9 @@ const run = async () => {
     const env = {
       INPUT_TOKEN: process.env.NODE_AUTH_TOKEN
     }
-    await exec('npm deprecate @storykit/models@1.2.1-pr10.0 "Beta release deprecated, please use latest version."', { env }).catch(err => (debug(err)))
+
+
+
 
     setOutput('removed-releases', tags.join());
   } catch (err) {
