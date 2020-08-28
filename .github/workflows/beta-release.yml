@@ -4,8 +4,7 @@ on:
   pull_request:
     branches:
       - '*'
-    branches-ignore:
-      - 'master'
+      - '!master'
 
 jobs:
   beta-release:
