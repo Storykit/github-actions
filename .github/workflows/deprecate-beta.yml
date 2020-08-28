@@ -2,8 +2,7 @@ name: Deprecate Beta
 
 on:
   pull_request:
-    branches:
-      - '*'
+    types: [closed]
 
 jobs:
   beta-release:
