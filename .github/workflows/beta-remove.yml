@@ -21,7 +21,7 @@ jobs:
         registry-url: 'https://registry.npmjs.org'
 
     - name: Remove beta release
-      uses: storykit/github-actions/package-remove-prerelease@10ae26e546f0780134c0012fa3cfa47cc4eacb0b
+      uses: storykit/github-actions/remove-beta-release@10ae26e546f0780134c0012fa3cfa47cc4eacb0b
       id: remove-beta-release
       with: 
         pull-request-fix: 'pr${{ github.event.number }}'
