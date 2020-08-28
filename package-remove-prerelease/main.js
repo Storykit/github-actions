@@ -39,7 +39,7 @@ const run = async () => {
       return git.request('DELETE /repos/:owner/:repo/git/refs/:ref', options)
         .then((response) => {
           if (response.status === 204) {
-            await exec(`npm deprecate @${owner}/${repo}@${tag} "Beta release deprecated, please use latest version."`, { env })
+            return exec(`npm deprecate @${owner}/${repo}@${tag} "Beta release deprecated, please use latest version."`, { env })
             .catch(err => (debug(err)));
             debug(`Removed tag: ${tag}`);
           } else {
