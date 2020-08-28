@@ -33,7 +33,7 @@ const run = async () => {
         repo: repo.toLocaleLowerCase(),
         ref: `tags/${tag}`,
         headers: {
-          authorization: `token ${token}`,
+          authorization: `token ${GITHUB_TOKEN}`,
         },
       }
       return git.request('DELETE /repos/:owner/:repo/git/refs/:ref', options)
