@@ -56,9 +56,9 @@ const run = async () => {
     const env = {
       INPUT_TOKEN: process.env.NODE_AUTH_TOKEN
     }
-    await exec('npm view @storykit/models@1.2.1-pr10.7', { env }).catch(err => debug(err))
-    await exec('npm config ls -l', { env }).catch(err => debug(err))
-    await exec('npm whoami', { env }).catch(err => debug(err))
+    await exec('npm view @storykit/models@1.2.1-pr10.7', { env }).catch(err => (debug(err)))
+    await exec('npm config ls -l', { env }).catch(err => (debug(err)))
+    await exec('npm whoami', { env }).catch(err => (debug(err)))
 
     setOutput('removed-releases', tags.join());
   } catch (err) {
