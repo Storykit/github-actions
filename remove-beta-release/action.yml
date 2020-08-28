@@ -1,10 +1,7 @@
-name: Remove Prerelease
+name: Remove Beta Release
 description: Remove prerelease tags and deprecate on NPM
 
-inputs: 
-  github-token:
-    description: Github Token
-    required: true
+inputs:
   pull-request-fix:
     description: Fix for pull request to deprecate
     required: true

@@ -1,4 +1,4 @@
-name: Deprecate Beta
+name: Remove beta release
 
 on:
   pull_request:
@@ -20,9 +20,9 @@ jobs:
         node-version: 12
         registry-url: 'https://registry.npmjs.org'
 
-    - name: Deprecate beta version
-      uses: ./package-remove-prerelease
-      id: package-deprecate
+    - name: Remove beta release
+      uses: storykit/github-actions/remove-beta-release@10ae26e546f0780134c0012fa3cfa47cc4eacb0b
+      id: remove-beta-release
       with: 
         pull-request-fix: 'pr${{ github.event.number }}'
       env:
@@ -30,5 +30,5 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
 
     - run: | 
-        echo Removed git tags: ${{ steps.package-deprecate.outputs.removed-git-tags }} 
-        echo Removed npm versions: ${{ steps.package-deprecate.outputs.removed-npm-versions }} 
+        echo Removed git tags: ${{ steps.remove-beta-release.outputs.removed-git-tags }} 
+        echo Removed npm versions: ${{ steps.remove-beta-release.outputs.removed-npm-versions }} 
