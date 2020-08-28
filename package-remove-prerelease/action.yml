@@ -1,0 +1,20 @@
+name: Remove Prerelease
+description: Remove prerelease tags and deprecate on NPM
+
+inputs: 
+  github-token:
+    description: Github Token
+    required: true
+  pull-request-fix:
+    description: Fix for pull request to deprecate
+    required: true
+
+outputs:
+  removed-git-tags:
+    description: Github Tags Removed
+  removed-npm-versions:
+    description: NPM Versions Removed
+
+runs:
+  using: "node12"
+  main: main.js
