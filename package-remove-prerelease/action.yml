@@ -10,8 +10,10 @@ inputs:
     required: true
 
 outputs:
-  removed-releases:
-    description: Tags removed
+  removed-git-tags:
+    description: Github Tags Removed
+  removed-npm-versions:
+    description: NPM Versions Removed
 
 runs:
   using: "node12"

@@ -31,4 +31,5 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
 
     - run: | 
-        echo ${{ steps.package-deprecate.outputs.removed-releases }} 
+        echo Removed git tags: ${{ steps.package-deprecate.outputs.removed-git-tags }} 
+        echo Removed npm versions: ${{ steps.package-deprecate.outputs.removed-npm-versions }} 
