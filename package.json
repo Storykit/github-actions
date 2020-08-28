@@ -1,6 +1,6 @@
 {
   "name": "github-actions",
-  "version": "1.3.1-pr10.32",
+  "version": "1.3.1-pr10.33",
   "description": "Github packages for Storykit org",
   "repository": {
     "type": "git",
