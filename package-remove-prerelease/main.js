@@ -27,6 +27,10 @@ const run = async () => {
     const tags = tagList.filter(tag => tag.name.includes(pullRequestFix))
       .map(tag => (tag.name));
 
+    const env = {
+      INPUT_TOKEN: process.env.NODE_AUTH_TOKEN
+    }
+
     const tagsToRemovePromise = tags.map(tag => {
       const options = {
         owner: owner.toLocaleLowerCase(),
@@ -40,7 +44,7 @@ const run = async () => {
         .then((response) => {
           if (response.status === 204) {
             return exec(`npm deprecate @${owner}/${repo}@${tag} "Beta release deprecated, please use latest version."`, { env })
-            .catch(err => (debug(err)));
+              .catch(err => (debug(err)));
             debug(`Removed tag: ${tag}`);
           } else {
             debug(`Status: ${response.status}`)
@@ -54,13 +58,6 @@ const run = async () => {
     })
 
     await Promise.all(tagsToRemovePromise)
-
-    const env = {
-      INPUT_TOKEN: process.env.NODE_AUTH_TOKEN
-    }
-
-
-
 
     setOutput('removed-releases', tags.join());
   } catch (err) {
