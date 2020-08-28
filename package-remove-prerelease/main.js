@@ -66,8 +66,8 @@ const run = async () => {
 
     await Promise.all(tagsToRemovePromise)
 
-    setOutput('removed-git-tags', removedGitTags.join());
-    setOutput('removed-npm-versions', removedNpmVersions.join());
+    setOutput('removed-git-tags', removedGitTags.join('\n'));
+    setOutput('removed-npm-versions', removedNpmVersions.join('\n'));
   } catch (err) {
     setFailed(err)
   }
