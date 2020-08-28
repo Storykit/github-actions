@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/Storykit/github-actions/compare/v1.4.0...v1.4.1) (2020-08-28)
+
+
+### Bug Fixes
+
+* remove ignore branch event' ([#15](https://github.com/Storykit/github-actions/issues/15)) ([a509510](https://github.com/Storykit/github-actions/commit/a50951042b8489f83de7ee635dfdea4a8a4415ba))
+
 # [1.4.0](https://github.com/Storykit/github-actions/compare/v1.3.0...v1.4.0) (2020-08-28)
 
 
