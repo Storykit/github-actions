@@ -11,7 +11,7 @@ const repo = context.payload.repository.name;
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const pullRequestFix = getInput('pull-request-fix');
 
-const git = new Octokit(token);
+const git = new Octokit(GITHUB_TOKEN);
 
 const run = async () => {
   try {
