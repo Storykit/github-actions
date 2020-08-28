@@ -21,12 +21,16 @@ jobs:
         node-version: 12
         registry-url: 'https://registry.npmjs.org'
 
+    - run: npm whoami
+
     - name: Deprecate beta version
       uses: ./package-remove-prerelease
       id: package-deprecate
       with: 
-        github-token: ${{ github.token }}
         pull-request-fix: 'pr${{ github.event.number }}'
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        GITHUB_TOKEN: ${{ github.token }}
 
     - run: | 
         echo ${{ steps.package-deprecate.outputs.removed-releases }} 

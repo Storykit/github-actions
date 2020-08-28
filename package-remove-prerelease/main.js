@@ -8,7 +8,7 @@ const { context } = require('@actions/github')
 const owner = context.payload.organization.login;
 const repo = context.payload.repository.name;
 
-const token = getInput('github-token');
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const pullRequestFix = getInput('pull-request-fix');
 
 const git = new Octokit(token);
