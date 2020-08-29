@@ -9,6 +9,7 @@ const owner = context.payload.organization.login.toLocaleLowerCase();
 const repo = context.payload.repository.name.toLocaleLowerCase();
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+const NODE_AUTH_TOKEN = process.env.NODE_AUTH_TOKEN;
 const pullRequestFix = getInput('pull-request-fix');
 
 const git = new Octokit(GITHUB_TOKEN);
@@ -17,11 +18,11 @@ debug(`owner: ${owner}`);
 debug(`repo:  ${repo}`);
 debug(`pull-request-fix:  ${pullRequestFix}`);
 
-if(!GITHUB_TOKEN){
+if (!GITHUB_TOKEN) {
   setFailed('GITHUB_TOKEN not set')
 }
 
-if(!NODE_AUTH_TOKEN){
+if (!NODE_AUTH_TOKEN) {
   setFailed('NODE_AUTH_TOKEN not set')
 }
 
@@ -43,7 +44,7 @@ const run = async () => {
       .map(tag => (tag.name));
 
     const env = {
-      INPUT_TOKEN: process.env.NODE_AUTH_TOKEN
+      INPUT_TOKEN: NODE_AUTH_TOKEN
     }
 
     let removedGitTags = [];
@@ -91,5 +92,3 @@ const run = async () => {
 }
 
 run();
-
-
