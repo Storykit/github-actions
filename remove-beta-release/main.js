@@ -13,12 +13,27 @@ const pullRequestFix = getInput('pull-request-fix');
 
 const git = new Octokit(GITHUB_TOKEN);
 
+debug(`owner: ${owner}`);
+debug(`repo:  ${repo}`);
+debug(`pull-request-fix:  ${pullRequestFix}`);
+
+if(!GITHUB_TOKEN){
+  setFailed('GITHUB_TOKEN not set')
+}
+
+if(!NODE_AUTH_TOKEN){
+  setFailed('NODE_AUTH_TOKEN not set')
+}
+
 const run = async () => {
   try {
     const { data: tagList } = await git.repos.listTags({
       owner,
       repo
-    });
+    }).catch(err => {
+      debug(`Failed listing tags`);
+      return Promise.reject(err);
+    })
 
     if (!pullRequestFix.includes('pr')) {
       setFailed('pull-request-fix must include snippet "pr" somewhere');
@@ -50,6 +65,7 @@ const run = async () => {
             debug(`Removed tag: ${tag}`);
             return exec(`npm deprecate @${owner}/${repo}@${tag} "Beta release deprecated, please use latest version."`, { env })
               .then(() => {
+                debug(`Deprecated version: ${tag}`);
                 removedNpmVersions.push(tag);
               })
               .catch(err => (debug(err)));
@@ -69,6 +85,7 @@ const run = async () => {
     setOutput('removed-git-tags', removedGitTags.join('\n'));
     setOutput('removed-npm-versions', removedNpmVersions.join('\n'));
   } catch (err) {
+    debug(`Failed executin main function: ${err}`);
     setFailed(err)
   }
 }
