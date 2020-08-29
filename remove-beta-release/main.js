@@ -10,8 +10,6 @@ const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const NODE_AUTH_TOKEN = process.env.NODE_AUTH_TOKEN;
 const pullRequestFix = getInput('pull-request-fix');
 
-const git = new Octokit(GITHUB_TOKEN);
-
 debug(`owner: ${owner}`);
 debug(`repo:  ${repo}`);
 debug(`pull-request-fix:  ${pullRequestFix}`);
@@ -24,15 +22,21 @@ if (!NODE_AUTH_TOKEN) {
   setFailed('NODE_AUTH_TOKEN not set')
 }
 
+const git = new Octokit(GITHUB_TOKEN);
+
 const run = async () => {
   try {
-    const { data: tagList } = await git.repos.listTags({
+    const { data: tagList } = await git.request('GET /repos/{owner}/{repo}/tags', {
       owner,
-      repo
-    }).catch(err => {
-      debug(`Failed listing tags`);
-      return Promise.reject(err);
+      repo,
+      headers: {
+        authorization: `token ${GITHUB_TOKEN}`,
+      },
     })
+      .catch(err => {
+        debug(`Failed listing tags`);
+        return Promise.reject(err);
+      })
 
     if (!pullRequestFix.includes('pr')) {
       setFailed('pull-request-fix must include snippet "pr" somewhere');
