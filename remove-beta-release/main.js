@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 const { exec } = require("@actions/exec");
 const { getInput, setFailed, setOutput, debug } = require("@actions/core");
 const { Octokit } = require("@octokit/rest");
