@@ -1,3 +1,18 @@
+## [1.4.3](https://github.com/Storykit/github-actions/compare/v1.4.2...v1.4.3) (2020-08-29)
+
+
+### Bug Fixes
+
+* add more verbose logging ([#26](https://github.com/Storykit/github-actions/issues/26)) ([198c325](https://github.com/Storykit/github-actions/commit/198c3258bfcbb7060f40c6fededebf91ea807dc6))
+
+## [1.4.2](https://github.com/Storykit/github-actions/compare/v1.4.1...v1.4.2) (2020-08-28)
+
+
+### Bug Fixes
+
+* add v1 tag to action ([#24](https://github.com/Storykit/github-actions/issues/24)) ([fd37f56](https://github.com/Storykit/github-actions/commit/fd37f568de46391ff28ce9bf2b043e1c4058401b))
+* refactor beta release action ([#20](https://github.com/Storykit/github-actions/issues/20)) ([b140c59](https://github.com/Storykit/github-actions/commit/b140c596bcf6c5cdce8aeb4544ae835d261f7b19))
+
 ## [1.4.1](https://github.com/Storykit/github-actions/compare/v1.4.0...v1.4.1) (2020-08-28)
 
 
