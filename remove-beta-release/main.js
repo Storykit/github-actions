@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 const { exec } = require("@actions/exec");
 const { getInput, setFailed, setOutput, debug } = require("@actions/core");
 const { Octokit } = require("@octokit/rest");
@@ -9,31 +7,36 @@ const owner = context.payload.organization.login.toLocaleLowerCase();
 const repo = context.payload.repository.name.toLocaleLowerCase();
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+const NODE_AUTH_TOKEN = process.env.NODE_AUTH_TOKEN;
 const pullRequestFix = getInput('pull-request-fix');
-
-const git = new Octokit(GITHUB_TOKEN);
 
 debug(`owner: ${owner}`);
 debug(`repo:  ${repo}`);
 debug(`pull-request-fix:  ${pullRequestFix}`);
 
-if(!GITHUB_TOKEN){
+if (!GITHUB_TOKEN) {
   setFailed('GITHUB_TOKEN not set')
 }
 
-if(!NODE_AUTH_TOKEN){
+if (!NODE_AUTH_TOKEN) {
   setFailed('NODE_AUTH_TOKEN not set')
 }
 
+const git = new Octokit(GITHUB_TOKEN);
+
 const run = async () => {
   try {
-    const { data: tagList } = await git.repos.listTags({
+    const { data: tagList } = await git.request('GET /repos/{owner}/{repo}/tags', {
       owner,
-      repo
-    }).catch(err => {
-      debug(`Failed listing tags`);
-      return Promise.reject(err);
+      repo,
+      headers: {
+        authorization: `token ${GITHUB_TOKEN}`,
+      },
     })
+      .catch(err => {
+        debug(`Failed listing tags`);
+        return Promise.reject(err);
+      })
 
     if (!pullRequestFix.includes('pr')) {
       setFailed('pull-request-fix must include snippet "pr" somewhere');
@@ -43,7 +46,7 @@ const run = async () => {
       .map(tag => (tag.name));
 
     const env = {
-      INPUT_TOKEN: process.env.NODE_AUTH_TOKEN
+      INPUT_TOKEN: NODE_AUTH_TOKEN
     }
 
     let removedGitTags = [];
@@ -91,5 +94,3 @@ const run = async () => {
 }
 
 run();
-
-
