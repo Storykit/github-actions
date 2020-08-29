@@ -1,3 +1,12 @@
+## [1.4.4](https://github.com/Storykit/github-actions/compare/v1.4.3...v1.4.4) (2020-08-29)
+
+
+### Bug Fixes
+
+* refactor request logic for getting tags ([4f9ac76](https://github.com/Storykit/github-actions/commit/4f9ac76651bd7ed4fb207e35cb845e864aaa8504))
+* refactor variable init ([#28](https://github.com/Storykit/github-actions/issues/28)) ([736b30e](https://github.com/Storykit/github-actions/commit/736b30e8c143a0b242b0a16ba2885d2731d465a6))
+* remove top line bash code ([2b52059](https://github.com/Storykit/github-actions/commit/2b52059785ada8f82559e32455c250b82ec92e3e))
+
 ## [1.4.3](https://github.com/Storykit/github-actions/compare/v1.4.2...v1.4.3) (2020-08-29)
 
 
