@@ -1,3 +1,10 @@
+## [1.4.3](https://github.com/Storykit/github-actions/compare/v1.4.2...v1.4.3) (2020-08-29)
+
+
+### Bug Fixes
+
+* add more verbose logging ([#26](https://github.com/Storykit/github-actions/issues/26)) ([198c325](https://github.com/Storykit/github-actions/commit/198c3258bfcbb7060f40c6fededebf91ea807dc6))
+
 ## [1.4.2](https://github.com/Storykit/github-actions/compare/v1.4.1...v1.4.2) (2020-08-28)
 
 
