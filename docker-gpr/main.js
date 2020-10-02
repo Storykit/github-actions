@@ -19,7 +19,8 @@ const getBranchName = () => {
   if (ref && /\/development|\/master/.test(ref)) {
     return ref.replace('refs/heads/', '');
   } else if (pr_ref && /\/pull\//.test(ref)) {
-    return pr_ref.replace('/', '-');
+    // Replace characters that isn't allowed in a docker tag name
+    return pr_ref.replace(/(^\.)|(^-)|[^A-Za-z0-9-_.]/g, '-').slice(0, 128);
   }
 }
 
