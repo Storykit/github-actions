@@ -1,3 +1,11 @@
+## [1.4.5](https://github.com/Storykit/github-actions/compare/v1.4.4...v1.4.5) (2020-10-02)
+
+
+### Bug Fixes
+
+* remove single quotatin marks from branches ignore ([e8e11f9](https://github.com/Storykit/github-actions/commit/e8e11f913d1d4feb92bdd6c1a2c8a543b278efe9))
+* replace characters not allowed in docker tag names ([#37](https://github.com/Storykit/github-actions/issues/37)) ([d67b0b3](https://github.com/Storykit/github-actions/commit/d67b0b3ca9fcae150e554715abe3a01f9dda1268))
+
 ## [1.4.4](https://github.com/Storykit/github-actions/compare/v1.4.3...v1.4.4) (2020-08-29)
 
 
