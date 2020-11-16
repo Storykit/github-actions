@@ -1,3 +1,10 @@
+## [1.4.6](https://github.com/Storykit/github-actions/compare/v1.4.5...v1.4.6) (2020-11-16)
+
+
+### Bug Fixes
+
+* remove newline joining since shell tries to execute commands thatt does not exist ([#40](https://github.com/Storykit/github-actions/issues/40)) ([71a8148](https://github.com/Storykit/github-actions/commit/71a8148ea4ba2a7bd16a55534376ed6a1ac47be9))
+
 ## [1.4.5](https://github.com/Storykit/github-actions/compare/v1.4.4...v1.4.5) (2020-10-02)
 
 
