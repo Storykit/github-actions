@@ -31,7 +31,7 @@ async function pushToHeroku() {
     const appName = getInput("heroku-app-name");
     const formation = getInput("heroku-app-formation");
     await exec(
-      `heroku container:login --app ${appName} && docker push registry.heroku.com/${appName}/${formation}`,
+      `docker push registry.heroku.com/${appName}/${formation}`,
       null,
       {
         env: {
