@@ -1,0 +1,21 @@
+name: Heroku Docker Release
+description: Build docker image and upload it to a heroku app
+
+inputs:
+  heroku-app-name:
+    description: Heroku app name
+    required: true
+  heroku-user-email:
+    description: Heroku user email that the release will be tagged with
+    required: true
+  heroku-api-key:
+    description: Heroku api key for the user
+    required: true
+  heroku-app-formation:
+    description: Heroku app formation
+    default: 'web'
+    required: false
+
+runs:
+  using: "node12"
+  main: main.js
