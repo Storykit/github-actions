@@ -1,4 +1,4 @@
-name: Heroku Docker Release
+name: heroku-docker-release
 description: Build docker image and upload it to a heroku app
 
 inputs:
