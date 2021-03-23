@@ -18,7 +18,13 @@ async function loginToHeroku() {
     const password = getInput("heroku-api-key");
     const login = getInput("heroku-user-email");
     await exec(
-      `echo ${password} | docker login --username=${login} registry.heroku.com --password-stdin`
+      `heroku container:login`,
+      null,
+      {
+        env: {
+          'HEROKU_API_KEY': password,
+        }
+      }
     );
   } catch (err) {
     setFailed(`failed logging in to heroku: ${err}`);
