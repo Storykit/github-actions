@@ -30,7 +30,7 @@ async function pushToHeroku() {
     const password = getInput("heroku-api-key");
     const appName = getInput("heroku-app-name");
     await exec(
-      `HEROKU_API_KEY=${password} heroku container:push web --app ${appName}`
+      `export HEROKU_API_KEY=${password} && heroku container:push web --app ${appName}`
     );
   } catch (err) {
     setFailed(`failed pushing to heroku: ${err}`);
@@ -42,7 +42,7 @@ async function releaseToHeroku() {
     const password = getInput("heroku-api-key");
     const appName = getInput("heroku-app-name");
     await exec(
-      `HEROKU_API_KEY=${password} heroku container:release web --app ${appName}`
+      `export HEROKU_API_KEY=${password} && heroku container:release web --app ${appName}`
     );
   } catch (err) {
     setFailed(`failed releasing to heroku: ${err}`);
