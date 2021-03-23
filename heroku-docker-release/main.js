@@ -42,7 +42,7 @@ async function releaseToHeroku() {
   try {
     const password = getInput("heroku-api-key");
     const appName = getInput("heroku-app-name");
-    const formation = 
+    const formation = getInput("heroku-app-formation");
     await exec(
       `heroku container:release ${formation} --app ${appName}`,
       null,
