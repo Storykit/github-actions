@@ -17,5 +17,5 @@ inputs:
     required: false
 
 runs:
-  using: "ubuntu-latest"
+  using: "node12"
   main: main.js

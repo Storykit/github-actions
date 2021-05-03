@@ -1,14 +1,6 @@
 const { exec } = require("@actions/exec");
 const { getInput, setFailed } = require("@actions/core");
 
-async function installHeroku() {
-  try {
-    await exec('heroku --version');
-  } catch (err) {
-    setFailed(`failed to install heroku cli: ${err}`);
-  }
-}
-
 async function loginToHeroku() {
   try {
     const password = getInput("heroku-api-key");
@@ -19,6 +11,7 @@ async function loginToHeroku() {
       {
         env: {
           'HEROKU_API_KEY': password,
+          HOME: '.',
         }
       }
     );
@@ -38,6 +31,7 @@ async function pushToHeroku() {
       {
         env: {
           'HEROKU_API_KEY': password,
+          HOME: '.',
         }
       }
     );
@@ -57,6 +51,7 @@ async function releaseToHeroku() {
       {
         env: {
           'HEROKU_API_KEY': password,
+          HOME: '.',
         }
       }
     );
@@ -66,7 +61,6 @@ async function releaseToHeroku() {
 }
 
 async function run() {
-  await installHeroku();
   await loginToHeroku();
   await pushToHeroku();
   await releaseToHeroku();
