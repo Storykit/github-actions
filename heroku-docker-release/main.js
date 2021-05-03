@@ -11,6 +11,7 @@ async function loginToHeroku() {
       {
         env: {
           'HEROKU_API_KEY': password,
+          HOME: '.',
         }
       }
     );
@@ -30,6 +31,7 @@ async function pushToHeroku() {
       {
         env: {
           'HEROKU_API_KEY': password,
+          HOME: '.',
         }
       }
     );
@@ -49,6 +51,7 @@ async function releaseToHeroku() {
       {
         env: {
           'HEROKU_API_KEY': password,
+          HOME: '.',
         }
       }
     );
