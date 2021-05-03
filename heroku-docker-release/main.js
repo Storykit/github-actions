@@ -3,7 +3,7 @@ const { getInput, setFailed } = require("@actions/core");
 
 async function installHeroku() {
   try {
-    await exec('curl https://cli-assets.heroku.com/install-ubuntu.sh | sh');
+    await exec('heroku --version');
   } catch (err) {
     setFailed(`failed to install heroku cli: ${err}`);
   }
