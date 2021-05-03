@@ -1,6 +1,14 @@
 const { exec } = require("@actions/exec");
 const { getInput, setFailed } = require("@actions/core");
 
+async function installHeroku() {
+  try {
+    await exec('curl https://cli-assets.heroku.com/install.sh | sh');
+  } catch (err) {
+    setFailed(`failed to install heroku cli: ${err}`);
+  }
+}
+
 async function loginToHeroku() {
   try {
     const password = getInput("heroku-api-key");
@@ -58,6 +66,7 @@ async function releaseToHeroku() {
 }
 
 async function run() {
+  await installHeroku();
   await loginToHeroku();
   await pushToHeroku();
   await releaseToHeroku();
