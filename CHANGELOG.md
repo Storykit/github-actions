@@ -1,3 +1,12 @@
+# [1.5.0](https://github.com/Storykit/github-actions/compare/v1.4.6...v1.5.0) (2021-03-26)
+
+
+### Features
+
+* extract logic from main ([#42](https://github.com/Storykit/github-actions/issues/42)) ([3a23319](https://github.com/Storykit/github-actions/commit/3a23319d21fe82142b35040cb4ec2954748a5821))
+* heroku docker release action ([#44](https://github.com/Storykit/github-actions/issues/44)) ([3bdc902](https://github.com/Storykit/github-actions/commit/3bdc902e93286b49d50458e37813cded6d6dd143))
+* multiple images ([#45](https://github.com/Storykit/github-actions/issues/45)) ([1895aae](https://github.com/Storykit/github-actions/commit/1895aaee49accbf8247fbb1af5cac7f2b4110d3e))
+
 ## [1.4.6](https://github.com/Storykit/github-actions/compare/v1.4.5...v1.4.6) (2020-11-16)
 
 
