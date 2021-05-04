@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/Storykit/github-actions/compare/v1.5.0...v1.5.1) (2021-05-04)
+
+
+### Bug Fixes
+
+* set HOME env variable for heroku cli ([5d76969](https://github.com/Storykit/github-actions/commit/5d76969d9abde62c0c1711367fec4e53f4a275d3))
+
 # [1.5.0](https://github.com/Storykit/github-actions/compare/v1.4.6...v1.5.0) (2021-03-26)
 
 
