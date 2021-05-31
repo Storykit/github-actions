@@ -6,6 +6,8 @@ Build and release docker images to heroku.
 Name your docker files according to the formation they are for. For example `Dockerfile.web` formation for `web`.
 See more [here](https://devcenter.heroku.com/articles/container-registry-and-runtime#pushing-multiple-images).
 
+The environment variables `NPM_TOKEN` and `NODE_ENV` are passed as build args to docker.
+
 ## Action Options:
 
 |Parameter|Description|Default Value|Required|

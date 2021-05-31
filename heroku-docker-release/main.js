@@ -26,7 +26,7 @@ async function pushToHeroku() {
     const appName = getInput("heroku-app-name");
     const formation = getInput("heroku-app-formation");
     await exec(
-      `heroku container:push ${formation} --recursive --app ${appName} --arg NPM_TOKEN=${process.env.NPM_TOKEN}`,
+      `heroku container:push ${formation} --recursive --app ${appName} --arg NPM_TOKEN=${process.env.NPM_TOKEN} --arg NODE_ENV=${process.env.NODE_ENV}`,
       null,
       {
         env: {
