@@ -20,13 +20,21 @@ async function loginToHeroku() {
   }
 }
 
+const containerArgs = [
+  'NPM_TOKEN',
+  'NODE_ENV'
+]
+
 async function pushToHeroku() {
   try {
     const password = getInput("heroku-api-key");
     const appName = getInput("heroku-app-name");
     const formation = getInput("heroku-app-formation");
+    const args = containerArgs.filter(key => !!process.env[key])
+      .map(key => `${key}=${process.env[key]}`);
+
     await exec(
-      `heroku container:push ${formation} --recursive --app ${appName} --arg NPM_TOKEN=${process.env.NPM_TOKEN} --arg NODE_ENV=${process.env.NODE_ENV}`,
+      `heroku container:push ${formation} --recursive --app ${appName} --arg ${args.join(',')}`,
       null,
       {
         env: {
