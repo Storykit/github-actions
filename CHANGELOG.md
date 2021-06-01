@@ -1,3 +1,10 @@
+## [1.5.3](https://github.com/Storykit/github-actions/compare/v1.5.2...v1.5.3) (2021-06-01)
+
+
+### Bug Fixes
+
+* use same args for multiple inputs ([#53](https://github.com/Storykit/github-actions/issues/53)) ([0099e15](https://github.com/Storykit/github-actions/commit/0099e15f5fd78c136cc37d9c5e3ad9cc33df0a1f))
+
 ## [1.5.2](https://github.com/Storykit/github-actions/compare/v1.5.1...v1.5.2) (2021-05-31)
 
 
