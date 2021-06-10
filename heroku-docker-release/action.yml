@@ -15,6 +15,9 @@ inputs:
     description: Heroku app formation
     default: 'web'
     required: false
+  verbose:
+    description: Verbose output from Herkou container push and release
+    default: false
 
 runs:
   using: "node12"

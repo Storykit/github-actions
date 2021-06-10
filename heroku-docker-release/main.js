@@ -30,11 +30,12 @@ async function pushToHeroku() {
     const password = getInput("heroku-api-key");
     const appName = getInput("heroku-app-name");
     const formation = getInput("heroku-app-formation");
+    const verbose = getInput("verbose");
     const args = containerArgs.filter(key => !!process.env[key])
       .map(key => `${key}=${process.env[key]}`);
 
     await exec(
-      `heroku container:push ${formation} --recursive --app ${appName} --arg ${args.join(',')}`,
+      `heroku container:push ${formation} --recursive --app ${appName} --arg ${args.join(',')}${verbose ? ' -v' : ''}`,
       null,
       {
         env: {
@@ -53,8 +54,9 @@ async function releaseToHeroku() {
     const password = getInput("heroku-api-key");
     const appName = getInput("heroku-app-name");
     const formation = getInput("heroku-app-formation");
+    const verbose = getInput("verbose");
     await exec(
-      `heroku container:release ${formation} --app ${appName}`,
+      `heroku container:release ${formation} --app ${appName}${verbose ? ' -v' : ''}`,
       null,
       {
         env: {
