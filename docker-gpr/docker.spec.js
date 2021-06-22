@@ -36,7 +36,7 @@ describe('docker', () => {
 
     const command = getLoginCommand();
 
-    expect(command).toEqual('docker login docker.pkg.github.com -u services -p ASD123')
+    expect(command).toEqual('docker login ghcr.io -u services -p ASD123')
   });
 
   test('get build command with substribg hash tag', () => {
@@ -91,7 +91,7 @@ describe('docker', () => {
 
     const prefixTag = `${process.env.GITHUB_REPOSITORY}/${inputValues["image-name"]}`
 
-    expect(command).toEqual(`docker push docker.pkg.github.com/${prefixTag} --all-tags`)
+    expect(command).toEqual(`docker push ghcr.io/${prefixTag} --all-tags`)
   });
 });
 
