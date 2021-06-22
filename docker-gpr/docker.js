@@ -74,7 +74,7 @@ const getLoginCommand = () => {
   const username = process.env.GITHUB_ACTOR;
   const token = getInput("repo-token");
 
-  return `docker login docker.pkg.github.com -u ${username} -p ${token}`;
+  return `docker login ghcr.io -u ${username} -p ${token}`;
 }
 
 const getPushCommand = () => {
