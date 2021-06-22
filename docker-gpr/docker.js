@@ -1,7 +1,7 @@
 const { getInput, debug, setSecret } = require("@actions/core");
 
 const BUILD_ARGS = ['NPM_TOKEN'];
-const containerRegistry = 'docker.pkg.github.com';
+const containerRegistry = 'ghcr.io';
 
 const dockerfileLocation = getInput("dockerfile-location");
 const imageName = getInput("image-name").toLowerCase();
