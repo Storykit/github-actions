@@ -1,3 +1,10 @@
+## [1.5.4](https://github.com/Storykit/github-actions/compare/v1.5.3...v1.5.4) (2021-07-01)
+
+
+### Bug Fixes
+
+* allow for args to be empty ([#64](https://github.com/Storykit/github-actions/issues/64)) ([1f4e956](https://github.com/Storykit/github-actions/commit/1f4e956977539b9c8089a4c817dc9bd0d5787ad2))
+
 ## [1.5.3](https://github.com/Storykit/github-actions/compare/v1.5.2...v1.5.3) (2021-06-01)
 
 
