@@ -34,7 +34,7 @@ async function pushToHeroku() {
       .map(key => `${key}=${process.env[key]}`);
 
     await exec(
-      `heroku container:push ${formation} --recursive --app ${appName} --arg ${args.join(',')}`,
+      `heroku container:push ${formation} --recursive --app ${appName} ${args.length ? '--arg ' + args.join(',') : ''}`,
       null,
       {
         env: {
