@@ -1,3 +1,10 @@
+## [1.5.5](https://github.com/Storykit/github-actions/compare/v1.5.4...v1.5.5) (2021-07-06)
+
+
+### Bug Fixes
+
+* declare containerArgs in pushToHeroku fn scope ([d780eb6](https://github.com/Storykit/github-actions/commit/d780eb6999fca788380b4edccd8aa4c132f9f72a))
+
 ## [1.5.4](https://github.com/Storykit/github-actions/compare/v1.5.3...v1.5.4) (2021-07-01)
 
 
