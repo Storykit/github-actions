@@ -20,12 +20,12 @@ async function loginToHeroku() {
   }
 }
 
-const containerArgs = [
-  'NPM_TOKEN',
-  'NODE_ENV'
-]
-
 async function pushToHeroku() {
+  const containerArgs = [
+    'NPM_TOKEN',
+    'NODE_ENV'
+  ];
+
   try {
     const password = getInput("heroku-api-key");
     const appName = getInput("heroku-app-name");
