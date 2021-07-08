@@ -1,3 +1,10 @@
+## [1.5.6](https://github.com/Storykit/github-actions/compare/v1.5.5...v1.5.6) (2021-07-08)
+
+
+### Bug Fixes
+
+* ability to pass basic pass as build argument to docker file ([be1b9dd](https://github.com/Storykit/github-actions/commit/be1b9ddab29fefcae7361c06da92a95a96347cd0))
+
 ## [1.5.5](https://github.com/Storykit/github-actions/compare/v1.5.4...v1.5.5) (2021-07-06)
 
 
