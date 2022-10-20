@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Build, Tag, Push
       uses: storykit/github-actions/docker-gpr@v1.2.0
