@@ -1,0 +1,103 @@
+name: Deploy to testenv on trigger
+
+on:
+  workflow_call:
+    inputs:
+      parameter:
+        required: true
+        type: string
+      image:
+        required: true
+        type: string
+
+env:
+  DEPLOYMENT_PARAMETER: ${{ inputs.parameter }}
+
+jobs:
+#  commentcheck:
+#    runs-on: ubuntu-latest
+#    outputs:
+#      testenv: ${{ steps.check2.outputs.testenv }}
+#      ref: ${{ steps.check3.outputs.ref }}
+#    steps:
+#      - uses: khan/pull-request-comment-trigger@v1.1.0
+#        id: check
+#        with:
+#          trigger: '@deploy'
+#          reaction: rocket
+#        env:
+#          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+#      - run: echo 'testenv=${{ steps.check.outputs.comment_body }}' | sed s/@deploy.// >> $GITHUB_OUTPUT
+#        if: steps.check.outputs.triggered == 'true'
+#        id: check2
+#      - run: echo "ref=refs/pull/$(basename ${{ github.event.issue.html_url }})/head" >> $GITHUB_OUTPUT
+#        if: steps.check.outputs.triggered == 'true'
+#        id: check3
+#
+#  build:
+#    needs: [commentcheck]
+#    runs-on: ubuntu-latest
+#    if: needs.commentcheck.outputs.testenv != ''
+#    steps:
+#      - name: Checkout this repo
+#        uses: actions/checkout@v3
+#        with:
+#          ref: ${{ needs.commentcheck.outputs.ref }}
+#      - name: Configure AWS Credentials
+#        uses: aws-actions/configure-aws-credentials@v1
+#        with:
+#          aws-access-key-id: ${{ secrets.TESTENV_AWS_ACCESS_KEY_ID }}
+#          aws-secret-access-key: ${{ secrets.TESTENV_AWS_SECRET_ACCESS_KEY }}
+#          aws-region: eu-west-1
+#
+#      - name: Login to Amazon ECR
+#        id: login-ecr
+#        uses: aws-actions/amazon-ecr-login@v1
+#
+#      - name: Build, tag, and push docker image to Amazon ECR
+#        env:
+#          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+#          IMAGE: ${{ inputs.image }}
+#          IMAGE_TAG: ${{ needs.commentcheck.outputs.testenv }}-${{ github.sha }}-${{ github.run_id }}
+#          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+#        run: |
+#          docker build -t $REGISTRY/$IMAGE:$IMAGE_TAG --build-arg NPM_TOKEN=$NPM_TOKEN .
+#          docker push $REGISTRY/$IMAGE:$IMAGE_TAG
+
+  deploy:
+    needs: [commentcheck, build]
+    runs-on: ubuntu-latest
+    if: needs.commentcheck.outputs.testenv != ''
+    steps:
+      - run: echo 'HW_STACK=${{ needs.commentcheck.outputs.testenv }}' >> $GITHUB_ENV
+      - uses: actions/checkout@v3
+        name: Checkout CDK repo
+        with:
+          repository: Storykit/hollywood
+          ref: master
+          token: ${{ secrets.PAT_GITHUB }}
+      - run: npm install
+        name: Install dependencies
+      - name: Bootstrap environment
+        run: npx cdk bootstrap --require-approval never
+        env:
+          CDK_DEFAULT_ACCOUNT: ${{ secrets.TESTENV_ACCOUNT_ID }}
+          AWS_DEFAULT_REGION: eu-west-1
+          AWS_ACCESS_KEY_ID: ${{ secrets.TESTENV_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.TESTENV_AWS_SECRET_ACCESS_KEY }}
+      - name: Deploy environment
+        run: npx cdk deploy --parameters $DEPLOYMENT_PARAMETER=$REGISTRY/$IMAGE:$IMAGE_TAG --require-approval never
+        env:
+          CDK_DEFAULT_ACCOUNT: ${{ secrets.TESTENV_ACCOUNT_ID }}
+          AWS_DEFAULT_REGION: eu-west-1
+          REGISTRY: ${{ secrets.TESTENV_REGISTRY }}
+          IMAGE: ${{ inputs.image }}
+          IMAGE_TAG: ${{ needs.commentcheck.outputs.testenv }}-${{ github.sha }}-${{ github.run_id }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.TESTENV_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.TESTENV_AWS_SECRET_ACCESS_KEY }}
+          # env needed _inside_ testenvs:
+          VAPID_PUBLIC_KEY: ${{ secrets.TESTENV_VAPID_PUBLIC_KEY }}
+          VAPID_PRIVATE_KEY: ${{ secrets.TESTENV_VAPID_PRIVATE_KEY }}
+          AUTH0_CLIENT_ID: ${{ secrets.TESTENV_AUTH0_CLIENT_ID }}
+          AUTH0_CLIENT_SECRET: ${{ secrets.TESTENV_AUTH0_CLIENT_SECRET }}
+          IMGIX_URL_TOKEN: ${{ secrets.TESTENV_IMGIX_URL_TOKEN }}
