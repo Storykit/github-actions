@@ -8,10 +8,7 @@ inputs:
     required: true
     type: string
 
-env:
-  DEPLOYMENT_PARAMETER: ${{ inputs.parameter }}
-
-jobs:
+#jobs:
 #  commentcheck:
 #    runs-on: ubuntu-latest
 #    outputs:
@@ -86,6 +83,7 @@ runs:
         CDK_DEFAULT_ACCOUNT: ${{ secrets.TESTENV_ACCOUNT_ID }}
         AWS_DEFAULT_REGION: eu-west-1
         REGISTRY: ${{ secrets.TESTENV_REGISTRY }}
+        DEPLOYMENT_PARAMETER: ${{ inputs.parameter }}
         IMAGE: ${{ inputs.image }}
         IMAGE_TAG: ${{ needs.commentcheck.outputs.testenv }}-${{ github.sha }}-${{ github.run_id }}
         AWS_ACCESS_KEY_ID: ${{ secrets.TESTENV_AWS_ACCESS_KEY_ID }}
