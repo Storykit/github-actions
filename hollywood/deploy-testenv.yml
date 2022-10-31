@@ -1,14 +1,12 @@
-name: Deploy to testenv on trigger
+name: Deploy to testenv
 
-on:
-  workflow_call:
-    inputs:
-      parameter:
-        required: true
-        type: string
-      image:
-        required: true
-        type: string
+inputs:
+  parameter:
+    required: true
+    type: string
+  image:
+    required: true
+    type: string
 
 env:
   DEPLOYMENT_PARAMETER: ${{ inputs.parameter }}
@@ -64,40 +62,37 @@ jobs:
 #          docker build -t $REGISTRY/$IMAGE:$IMAGE_TAG --build-arg NPM_TOKEN=$NPM_TOKEN .
 #          docker push $REGISTRY/$IMAGE:$IMAGE_TAG
 
-  deploy:
-    needs: [commentcheck, build]
-    runs-on: ubuntu-latest
-    if: needs.commentcheck.outputs.testenv != ''
-    steps:
-      - run: echo 'HW_STACK=${{ needs.commentcheck.outputs.testenv }}' >> $GITHUB_ENV
-      - uses: actions/checkout@v3
-        name: Checkout CDK repo
-        with:
-          repository: Storykit/hollywood
-          ref: master
-          token: ${{ secrets.PAT_GITHUB }}
-      - run: npm install
-        name: Install dependencies
-      - name: Bootstrap environment
-        run: npx cdk bootstrap --require-approval never
-        env:
-          CDK_DEFAULT_ACCOUNT: ${{ secrets.TESTENV_ACCOUNT_ID }}
-          AWS_DEFAULT_REGION: eu-west-1
-          AWS_ACCESS_KEY_ID: ${{ secrets.TESTENV_AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.TESTENV_AWS_SECRET_ACCESS_KEY }}
-      - name: Deploy environment
-        run: npx cdk deploy --parameters $DEPLOYMENT_PARAMETER=$REGISTRY/$IMAGE:$IMAGE_TAG --require-approval never
-        env:
-          CDK_DEFAULT_ACCOUNT: ${{ secrets.TESTENV_ACCOUNT_ID }}
-          AWS_DEFAULT_REGION: eu-west-1
-          REGISTRY: ${{ secrets.TESTENV_REGISTRY }}
-          IMAGE: ${{ inputs.image }}
-          IMAGE_TAG: ${{ needs.commentcheck.outputs.testenv }}-${{ github.sha }}-${{ github.run_id }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.TESTENV_AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.TESTENV_AWS_SECRET_ACCESS_KEY }}
-          # env needed _inside_ testenvs:
-          VAPID_PUBLIC_KEY: ${{ secrets.TESTENV_VAPID_PUBLIC_KEY }}
-          VAPID_PRIVATE_KEY: ${{ secrets.TESTENV_VAPID_PRIVATE_KEY }}
-          AUTH0_CLIENT_ID: ${{ secrets.TESTENV_AUTH0_CLIENT_ID }}
-          AUTH0_CLIENT_SECRET: ${{ secrets.TESTENV_AUTH0_CLIENT_SECRET }}
-          IMGIX_URL_TOKEN: ${{ secrets.TESTENV_IMGIX_URL_TOKEN }}
+runs:
+  steps:
+    - run: echo 'HW_STACK=${{ needs.commentcheck.outputs.testenv }}' >> $GITHUB_ENV
+    - uses: actions/checkout@v3
+      name: Checkout CDK repo
+      with:
+        repository: Storykit/hollywood
+        ref: master
+        token: ${{ secrets.PAT_GITHUB }}
+    - run: npm install
+      name: Install dependencies
+    - name: Bootstrap environment
+      run: npx cdk bootstrap --require-approval never
+      env:
+        CDK_DEFAULT_ACCOUNT: ${{ secrets.TESTENV_ACCOUNT_ID }}
+        AWS_DEFAULT_REGION: eu-west-1
+        AWS_ACCESS_KEY_ID: ${{ secrets.TESTENV_AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.TESTENV_AWS_SECRET_ACCESS_KEY }}
+    - name: Deploy environment
+      run: npx cdk deploy --parameters $DEPLOYMENT_PARAMETER=$REGISTRY/$IMAGE:$IMAGE_TAG --require-approval never
+      env:
+        CDK_DEFAULT_ACCOUNT: ${{ secrets.TESTENV_ACCOUNT_ID }}
+        AWS_DEFAULT_REGION: eu-west-1
+        REGISTRY: ${{ secrets.TESTENV_REGISTRY }}
+        IMAGE: ${{ inputs.image }}
+        IMAGE_TAG: ${{ needs.commentcheck.outputs.testenv }}-${{ github.sha }}-${{ github.run_id }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.TESTENV_AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.TESTENV_AWS_SECRET_ACCESS_KEY }}
+        # env needed _inside_ testenvs:
+        VAPID_PUBLIC_KEY: ${{ secrets.TESTENV_VAPID_PUBLIC_KEY }}
+        VAPID_PRIVATE_KEY: ${{ secrets.TESTENV_VAPID_PRIVATE_KEY }}
+        AUTH0_CLIENT_ID: ${{ secrets.TESTENV_AUTH0_CLIENT_ID }}
+        AUTH0_CLIENT_SECRET: ${{ secrets.TESTENV_AUTH0_CLIENT_SECRET }}
+        IMGIX_URL_TOKEN: ${{ secrets.TESTENV_IMGIX_URL_TOKEN }}
