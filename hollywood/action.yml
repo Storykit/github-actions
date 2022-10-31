@@ -10,6 +10,10 @@ inputs:
     required: true
     type: string
     description: Docker image name
+  testenv:
+    required: true
+    type: string
+    description: Name of the testenv to deploy
 
 #jobs:
 #  commentcheck:
@@ -65,7 +69,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - run: echo 'HW_STACK=${{ needs.commentcheck.outputs.testenv }}' >> $GITHUB_ENV
+    - run: echo 'HW_STACK=${{ inputs.testenv }}' >> $GITHUB_ENV
       shell: bash
     - uses: actions/checkout@v3
       name: Checkout CDK repo
@@ -93,7 +97,7 @@ runs:
         REGISTRY: ${{ secrets.TESTENV_REGISTRY }}
         DEPLOYMENT_PARAMETER: ${{ inputs.parameter }}
         IMAGE: ${{ inputs.image }}
-        IMAGE_TAG: ${{ needs.commentcheck.outputs.testenv }}-${{ github.sha }}-${{ github.run_id }}
+        IMAGE_TAG: ${{ inputs.testenv }}-${{ github.sha }}-${{ github.run_id }}
         AWS_ACCESS_KEY_ID: ${{ secrets.TESTENV_AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.TESTENV_AWS_SECRET_ACCESS_KEY }}
         # env needed _inside_ testenvs:
