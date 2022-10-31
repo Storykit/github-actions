@@ -1,12 +1,15 @@
 name: Deploy to testenv
+description: Reusable deploy pipe for testenv
 
 inputs:
   parameter:
     required: true
     type: string
+    description: cfnParameter for the application
   image:
     required: true
     type: string
+    description: Docker image name
 
 #jobs:
 #  commentcheck:
@@ -60,8 +63,10 @@ inputs:
 #          docker push $REGISTRY/$IMAGE:$IMAGE_TAG
 
 runs:
+  using: composite
   steps:
     - run: echo 'HW_STACK=${{ needs.commentcheck.outputs.testenv }}' >> $GITHUB_ENV
+      shell: bash
     - uses: actions/checkout@v3
       name: Checkout CDK repo
       with:
@@ -69,9 +74,11 @@ runs:
         ref: master
         token: ${{ secrets.PAT_GITHUB }}
     - run: npm install
+      shell: bash
       name: Install dependencies
     - name: Bootstrap environment
       run: npx cdk bootstrap --require-approval never
+      shell: bash
       env:
         CDK_DEFAULT_ACCOUNT: ${{ secrets.TESTENV_ACCOUNT_ID }}
         AWS_DEFAULT_REGION: eu-west-1
@@ -79,6 +86,7 @@ runs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.TESTENV_AWS_SECRET_ACCESS_KEY }}
     - name: Deploy environment
       run: npx cdk deploy --parameters $DEPLOYMENT_PARAMETER=$REGISTRY/$IMAGE:$IMAGE_TAG --require-approval never
+      shell: bash
       env:
         CDK_DEFAULT_ACCOUNT: ${{ secrets.TESTENV_ACCOUNT_ID }}
         AWS_DEFAULT_REGION: eu-west-1
