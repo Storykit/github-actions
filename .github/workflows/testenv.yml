@@ -1,0 +1,150 @@
+name: Deploy to testenv
+
+on:
+  workflow_call:
+    inputs:
+      image:
+        type: string
+        required: true
+      parameter:
+        type: string
+        required: true
+      dockerfile:
+        type: string
+        default: Dockerfile
+      trigger:
+        type: string
+        default: '@deploy'
+    secrets:
+      aws_access_key:
+        required: true
+      aws_secret_key:
+        required: true
+      token:
+        required: true
+      npm_token:
+        required: true
+      registry:
+        required: true
+      account_id:
+        required: true
+
+jobs:
+  commentcheck:
+    runs-on: ubuntu-latest
+    outputs:
+      testenv: ${{ steps.check2.outputs.testenv }}
+      ref: ${{ steps.check3.outputs.ref }}
+      triggered: ${{ steps.check.outputs.triggered }}
+    steps:
+      - uses: khan/pull-request-comment-trigger@v1.1.0
+        id: check
+        with:
+          trigger: ${{ inputs.trigger }}
+          reaction: rocket
+        env:
+          GITHUB_TOKEN: ${{ secrets.token }}
+      - run: echo 'testenv=${{ steps.check.outputs.comment_body }}' | sed s/${{ inputs.trigger }}.// >> $GITHUB_OUTPUT
+        if: steps.check.outputs.triggered == 'true'
+        id: check2
+      - run: echo "ref=refs/pull/$(basename ${{ github.event.issue.html_url }})/head" >> $GITHUB_OUTPUT
+        if: steps.check.outputs.triggered == 'true'
+        id: check3
+
+  build:
+    if: needs.commentcheck.outputs.triggered == 'true'
+    needs: [commentcheck]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout this repo
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ needs.commentcheck.outputs.ref }}
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.aws_access_key }}
+          aws-secret-access-key: ${{ secrets.aws_secret_key }}
+          aws-region: eu-west-1
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, tag, and push docker image to Amazon ECR
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE: ${{ inputs.image }}
+          IMAGE_TAG: ${{ needs.commentcheck.outputs.testenv }}-${{ github.sha }}-${{ github.run_id }}
+          NPM_TOKEN: ${{ secrets.npm_token }}
+          DOCKERFILE: ${{ inputs.dockerfile }}
+        run: |
+          docker build \
+            -f $DOCKERFILE \
+            -t $REGISTRY/$IMAGE:$IMAGE_TAG \
+            --build-arg NPM_TOKEN=$NPM_TOKEN \
+            --build-arg HASHVER=$(./scripts/hashver.sh || echo "NA") \
+            .
+          docker push $REGISTRY/$IMAGE:$IMAGE_TAG
+
+  deploy:
+    if: needs.commentcheck.outputs.triggered == 'true'
+    needs: [commentcheck, build]
+    permissions:
+      deployments: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: chrnorm/deployment-action@v2
+        name: Create GitHub deployment
+        id: deployment
+        with:
+          token: '${{ github.token }}'
+          environment-url: 'https://app.${{ needs.commentcheck.outputs.testenv }}.test.storykit-stage.io'
+          environment: ${{ needs.commentcheck.outputs.testenv }}
+          ref: ${{ needs.commentcheck.outputs.ref }}
+      - uses: actions/checkout@v3
+        name: Checkout CDK repo
+        with:
+          repository: Storykit/hollywood
+          ref: master
+          token: ${{ secrets.token }}
+      - run: npm install
+        name: Install dependencies
+      - name: Bootstrap environment
+        run: npx cdk bootstrap --require-approval never
+        env:
+          CDK_DEFAULT_ACCOUNT: ${{ secrets.account_id }}
+          AWS_DEFAULT_REGION: eu-west-1
+          AWS_ACCESS_KEY_ID: ${{ secrets.aws_access_key }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.aws_secret_key }}
+          HW_STACK: ${{ needs.commentcheck.outputs.testenv }}
+      - name: Deploy environment
+        run: npx cdk deploy --parameters $DEPLOYMENT_PARAMETER=$REGISTRY/$IMAGE:$IMAGE_TAG --require-approval never
+        env:
+          DEPLOYMENT_PARAMETER: ${{ inputs.parameter }}
+          CDK_DEFAULT_ACCOUNT: ${{ secrets.account_id }}
+          AWS_DEFAULT_REGION: eu-west-1
+          REGISTRY: ${{ secrets.registry }}
+          IMAGE: ${{ inputs.image }}
+          IMAGE_TAG: ${{ needs.commentcheck.outputs.testenv }}-${{ github.sha }}-${{ github.run_id }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.aws_access_key }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.aws_secret_key }}
+          HW_STACK: ${{ needs.commentcheck.outputs.testenv }}
+      - name: Update deployment status (success)
+        if: success()
+        uses: chrnorm/deployment-status@v2
+        with:
+          token: '${{ github.token }}'
+          environment-url: 'https://app.${{ needs.commentcheck.outputs.testenv }}.test.storykit-stage.io'
+          state: 'success'
+          deployment-id: ${{ steps.deployment.outputs.deployment_id }}
+      - name: Update deployment status (failure)
+        if: failure()
+        uses: chrnorm/deployment-status@v2
+        with:
+          token: '${{ github.token }}'
+          environment-url: 'https://app.${{ needs.commentcheck.outputs.testenv }}.test.storykit-stage.io'
+          state: 'failure'
+          deployment-id: ${{ steps.deployment.outputs.deployment_id }}
+
+
