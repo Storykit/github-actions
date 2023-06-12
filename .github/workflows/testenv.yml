@@ -119,7 +119,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.aws_secret_key }}
           HW_STACK: ${{ needs.commentcheck.outputs.testenv }}
       - name: Deploy environment
-        run: npx cdk deploy --parameters $DEPLOYMENT_PARAMETER=$REGISTRY/$IMAGE:$IMAGE_TAG --require-approval never --no-rollback -m direct
+        run: npx cdk deploy --parameters $DEPLOYMENT_PARAMETER=$REGISTRY/$IMAGE:$IMAGE_TAG --require-approval never -m direct
         env:
           DEPLOYMENT_PARAMETER: ${{ inputs.parameter }}
           CDK_DEFAULT_ACCOUNT: ${{ secrets.account_id }}
