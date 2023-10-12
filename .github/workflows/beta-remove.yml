@@ -26,7 +26,6 @@ jobs:
       with: 
         pull-request-fix: 'pr${{ github.event.number }}'
       env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         GITHUB_TOKEN: ${{ github.token }}
 
     - run: | 

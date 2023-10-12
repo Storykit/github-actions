@@ -22,8 +22,6 @@ on:
         required: true
       token:
         required: true
-      npm_token:
-        required: true
       registry:
         required: true
       account_id:
@@ -76,13 +74,11 @@ jobs:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE: ${{ inputs.image }}
           IMAGE_TAG: ${{ needs.commentcheck.outputs.testenv }}-${{ github.sha }}-${{ github.run_id }}
-          NPM_TOKEN: ${{ secrets.npm_token }}
           DOCKERFILE: ${{ inputs.dockerfile }}
         run: |
           docker build \
             -f $DOCKERFILE \
             -t $REGISTRY/$IMAGE:$IMAGE_TAG \
-            --build-arg NPM_TOKEN=$NPM_TOKEN \
             --build-arg HASHVER=$(./scripts/hashver.sh || echo "NA") \
             .
           docker push $REGISTRY/$IMAGE:$IMAGE_TAG

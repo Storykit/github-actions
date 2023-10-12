@@ -1,7 +1,6 @@
 const Octocore = require("@actions/core");
 process.env.GITHUB_REPOSITORY = 'storykit'
 
-process.env.NPM_TOKEN = 'NPM_TOKEN';
 process.env.GITHUB_ACTOR = 'services'
 
 const { getBuildCommand, getLoginCommand, getPushCommand } = require("./docker");
@@ -76,14 +75,6 @@ describe('docker', () => {
     const hasPRTag = command.includes(`${prefixTag}:pr-feature-branch-1`);
 
     expect(hasPRTag).toEqual(true);
-  });
-
-  test('get build command with build arg', () => {
-    const command = getBuildCommand();
-
-    const hasBuildArg = command.includes("--build-arg NPM_TOKEN=NPM_TOKEN");
-
-    expect(hasBuildArg).toEqual(true);
   });
 
   test('get build command', () => {

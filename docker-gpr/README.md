@@ -44,6 +44,4 @@ jobs:
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
         image-name: sally
-      env:
-        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 ```

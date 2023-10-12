@@ -22,7 +22,6 @@ async function loginToHeroku() {
 
 async function pushToHeroku() {
   const containerArgs = [
-    'NPM_TOKEN',
     'NODE_ENV',
     'BASIC_PASS',
   ];

@@ -1,6 +1,5 @@
 const { getInput, debug, setSecret } = require("@actions/core");
 
-const BUILD_ARGS = ['NPM_TOKEN'];
 const containerRegistry = 'ghcr.io';
 
 const dockerfileLocation = getInput("dockerfile-location");
